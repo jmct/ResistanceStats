@@ -1,0 +1,3 @@
+This library is used for playing around with different configurations for teh game 'Resistance'.
+
+Right now we only have the most basic functions, creating a game consisting of either 'Spy' or 'Resistance' members.
