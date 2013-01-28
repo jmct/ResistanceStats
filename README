@@ -8,7 +8,7 @@ Example:
 
 Let's say that you wanted to find out the odds of the hammer being a Resistance member, in an 8 person game, when you're the leader (and also Resistance). 
 
-```Haskell
+```haskell
 chanceOfRHammer = NRLeaderAndHammer / NRLeader
     where rLeader = filter leaderIsResist $ makeSetOfGames 8
           leaderIsResist g  = (allegiance  $ leader g) == Resistance
