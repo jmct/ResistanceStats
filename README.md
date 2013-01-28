@@ -9,10 +9,10 @@ Example:
 Let's say that you wanted to find out the odds of the hammer being a Resistance member, in an 8 person game, when you're the leader (and also Resistance). 
 
 ```haskell
-chanceOfRHammer = NRLeaderAndHammer / NRLeader
+chanceOfRHammer = nRLeaderAndHammer / nRLeader
     where rLeader = filter leaderIsResist $ makeSetOfGames 8
           leaderIsResist g  = (allegiance  $ leader g) == Resistance
-          NRLeader          = genericLength rLeader
-          NRLeaderAndHammer = genericLength $ filter hammerIsResist rLeader
+          nRLeader          = genericLength rLeader
+          nRLeaderAndHammer = genericLength $ filter hammerIsResist rLeader
           hammerIsResist g  = (allegiance $ hammer g) == Resistance
 ```
