@@ -1,8 +1,17 @@
 module Resistance where
 
-data Player = Resistance
-            | Spy
+import Data.List (genericLength)
+
+data Allegiance = Resistance
+                | Spy
     deriving (Eq, Show)
+
+type GroupMember a = (a, Allegiance)
+
+type Player = GroupMember Int
+
+allegiance :: Player -> Allegiance
+allegiance = snd
 
 data Group a = Empty
              | Group {left :: [a], leader :: a, right :: [a]}
@@ -11,7 +20,7 @@ data Group a = Empty
 
 --This function allows you to create a group with arbitrary numbers of resistance and spies. 
 --To create groups that follow the rulebook's guidelines, see the 'makeSetOfGames' function
-possibleGroups :: Int -> Int -> [[Player]]
+possibleGroups :: Int -> Int -> [[Allegiance]]
 possibleGroups 0   0   = [[]]
 possibleGroups nRs nSs 
     = [x:xs | 
@@ -20,19 +29,28 @@ possibleGroups nRs nSs
              xs <- tails]
 
 --This takes a list of Player constructors and converts it into a Group data-type
-listToGroup :: [Player] -> Group Player
+--The reason for defaulting to an empty list for the right-hand side is because
+--the usual leadership change moves to the left. 
+listToGroup :: [Allegiance] -> Group Player
 listToGroup [] = Empty
-listToGroup (x:xs) = Group xs x []
+listToGroup xs = Group ys y []
+    where (y:ys) = zip [1..] xs
 
-leftAllegiance :: Group Player -> Player
-leftAllegiance g = case left g of
-                        []     -> last $ right g
-                        (x:xs) -> x
+leftPlayer :: Group Player -> Player
+leftPlayer g = case left g of
+                    []     -> last $ right g
+                    (x:xs) -> x
 
-rightAllegiance :: Group Player -> Player
-rightAllegiance g = case right g of
-                        []     -> last $ left g
-                        (x:xs) -> x
+leftAllegiance :: Group Player -> Allegiance
+leftAllegiance = snd . leftPlayer
+
+rightPlayer :: Group Player -> Player
+rightPlayer g = case right g of
+                    []     -> last $ left g
+                    (x:xs) -> x
+
+rightAllegiance :: Group Player -> Allegiance
+rightAllegiance = snd . rightPlayer
 
 --This function just shifts the leader to the person to the left of the current leader
 nextLeader :: Group Player -> Group Player
